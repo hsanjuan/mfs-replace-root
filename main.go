@@ -48,8 +48,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer repo.Close()
 
 	ds := repo.Datastore()
+
 	root, err := ds.Get(rootKey)
 	if err == datastore.ErrNotFound {
 		fmt.Println("empty MFS root")
