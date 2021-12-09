@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"os"
@@ -35,6 +36,8 @@ func setupPlugins(externalPluginsPath string) error {
 var rootKey = datastore.NewKey("/local/filesroot")
 
 func main() {
+	ctx := context.Background()
+
 	defaultPath, err := config.PathRoot()
 	if err != nil {
 		log.Fatal(err)
@@ -52,7 +55,7 @@ func main() {
 
 	ds := repo.Datastore()
 
-	root, err := ds.Get(rootKey)
+	root, err := ds.Get(ctx, rootKey)
 	if err == datastore.ErrNotFound {
 		fmt.Println("empty MFS root")
 	} else if err != nil {
@@ -75,7 +78,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	err = ds.Put(rootKey, newRoot.Bytes())
+	err = ds.Put(ctx, rootKey, newRoot.Bytes())
 	if err != nil {
 		log.Fatal(err)
 	}
